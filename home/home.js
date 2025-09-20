@@ -261,7 +261,7 @@ class HomePage {
                     localStorage.clear();
                     sessionStorage.clear();
                     // Redirect to login or home
-                    window.location.href = '../index.html';
+                    window.location.href = '../auth/auth.html';
                 }, 100);
             }
         };
