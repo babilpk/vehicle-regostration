@@ -468,8 +468,8 @@ renderTable() {
             <tr data-id="${reg.id}" class="urgency-${urgencyClass}" style="animation: fadeIn 0.3s ease ${index * 0.05}s both;">
                 <td><span class="registration-id">${reg.id.slice(-8)}</span></td>
                 <td><strong>${reg.ownerName || 'N/A'}</strong></td>
-                <td>${reg.email  || 'N/A'}</td>
                 <td>${reg.phone  || 'N/A'}</td>
+                <td>${reg.email  || 'N/A'}</td>
 
                 <td><span class="vehicle-type-badge">${this.formatVehicleType(reg.vehicleType)}</span></td>
                 <td><strong>${reg.registrationNumber || 'N/A'}</strong></td>
