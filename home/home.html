@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Registration Dashboard</title>
+    <meta name="description" content="Modern vehicle registration dashboard with real-time data">
+    <meta name="author" content="Your Name">
+    
+    <!-- External Resources -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Your existing CSS variables */
+        :root {
+            --primary-color: #667eea;
+            --primary-dark: #764ba2;
+            --secondary-color: #f8f9fa;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --text-light: #ffffff;
+            --border-color: #e8ecef;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.15);
+            --border-radius: 12px;
+            --border-radius-large: 20px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--secondary-color);
+            overflow-x: hidden;
+        }
+
+        /* Updated Header and Navigation - RESPONSIVE */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+            z-index: 1001;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            z-index: 1001;
+            position: relative;
+        }
+
+        .hamburger-line {
+            width: 25px;
+            height: 3px;
+            background: var(--text-primary);
+            margin: 3px 0;
+            transition: var(--transition);
+            border-radius: 2px;
+        }
+
+        /* Hamburger Animation */
+        .mobile-menu-btn.active .hamburger-line:nth-child(1) {
+            transform: rotate(-45deg) translate(-6px, 6px);
+        }
+
+        .mobile-menu-btn.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .hamburger-line:nth-child(3) {
+            transform: rotate(45deg) translate(-6px, -6px);
+        }
+
+        /* Navigation Menu */
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .nav-link:hover {
+            background: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        /* Hide mobile-only menu items on desktop */
+        .mobile-user-menu {
+            display: none;
+        }
+
+        /* Desktop User Menu */
+        .desktop-user-menu {
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-medium);
+        }
+
+        /* Dropdown Menu */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-medium);
+            border: 1px solid var(--border-color);
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .dropdown.active .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: var(--transition);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        .dropdown-item.danger:hover {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+        }
+
+        /* MOBILE RESPONSIVE STYLES */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 16px;
+            }
+            
+            .logo-text {
+                font-size: 18px;
+            }
+            
+            /* Show mobile menu button */
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            /* Hide desktop user menu */
+            .desktop-user-menu {
+                display: none;
+            }
+            
+            /* Show mobile user menu items */
+            .mobile-user-menu {
+                display: block;
+            }
+            
+            /* Mobile Navigation Menu */
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                padding: 20px 0;
+                box-shadow: var(--shadow-medium);
+                border-top: 1px solid var(--border-color);
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: var(--transition);
+                max-height: calc(100vh - 70px);
+                overflow-y: auto;
+            }
+            
+            .nav-menu.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            .nav-item {
+                margin: 0 20px;
+            }
+            
+            .nav-link {
+                padding: 16px 20px;
+                border-radius: var(--border-radius);
+                margin-bottom: 8px;
+                font-size: 16px;
+            }
+            
+            .nav-link i {
+                font-size: 20px;
+                min-width: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-container {
+                padding: 0 12px;
+            }
+            
+            .logo-text {
+                display: none;
+            }
+            
+            .logo-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+        }
+
+        /* Your existing styles for hero, actions, etc. */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 120px 24px 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 1000'><polygon fill='%23ffffff08' points='0,1000 1000,0 1000,1000'/></svg>");
+            pointer-events: none;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            font-weight: 400;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            padding: 60px 24px;
+            background: white;
+        }
+
+        .quick-actions-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .action-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: var(--border-radius-large);
+            box-shadow: var(--shadow-light);
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+
+        .action-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-heavy);
+            border-color: var(--primary-color);
+        }
+
+        .action-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 25px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            transition: var(--transition);
+        }
+
+        .action-card:hover .action-icon {
+            transform: scale(1.1);
+        }
+
+        .action-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .action-description {
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .action-btn {
+            background: var(--secondary-color);
+            color: var(--primary-color);
+            padding: 12px 24px;
+            border: 2px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: var(--transition);
+            display: inline-block;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Recent Activity */
+        .recent-activity {
+            padding: 60px 24px;
+            background: var(--secondary-color);
+        }
+
+        .activity-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .activity-list {
+            background: white;
+            border-radius: var(--border-radius-large);
+            box-shadow: var(--shadow-light);
+            overflow: hidden;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-item:hover {
+            background: var(--secondary-color);
+        }
+
+        .activity-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            font-size: 20px;
+            color: var(--primary-color);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-primary);
+        }
+
+        .activity-time {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .activity-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-success {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-warning {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning-color);
+        }
+
+        .status-pending {
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+        }
+
+        /* Loading states */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .loading i {
+            font-size: 2rem;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Enhanced Footer Styles */
+        .footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 50px 24px 0;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-top {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .footer-logo .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .footer-logo .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .footer-description {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 300px;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-links-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            position: relative;
+            padding: 4px 0;
+        }
+
+        .footer-link:hover {
+            color: white;
+            transform: translateX(4px);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 18px;
+        }
+
+        .social-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        .footer-text {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        /* Responsive styles for mobile */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .actions-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .action-card {
+                padding: 30px 20px;
+            }
+
+            .activity-item {
+                padding: 16px 20px;
+            }
+
+            .footer-top {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .footer-section {
+                text-align: center;
+            }
+
+            .footer-logo {
+                justify-content: center;
+            }
+
+            .footer-description {
+                max-width: none;
+                margin: 0 auto 20px;
+            }
+
+            .footer-social {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer {
+                padding: 30px 16px 0;
+            }
+
+            .footer-top {
+                gap: 25px;
+            }
+
+            .footer-social {
+                gap: 8px;
+            }
+
+            .social-link {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Responsive Header with Mobile Navigation -->
+    <header class="header">
+        <nav class="nav-container">
+            <!-- Logo -->
+            <a href="#" class="logo">
+                <div class="logo-icon">VR</div>
+                <span class="logo-text">Vehicle Registry</span>
+            </a>
+
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+
+            <!-- Navigation Menu -->
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active">
+                        <i class="ri-home-line"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../register/register.html" class="nav-link">
+                        <i class="ri-user-add-line"></i>
+                        <span>Registration</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../lists/list.html" class="nav-link">
+                        <i class="ri-list-check-2"></i>
+                        <span>List</span>
+                    </a>
+                </li>
+                <!-- Mobile-only User Menu -->
+                <li class="nav-item mobile-user-menu">
+                    <a href="#" class="nav-link" onclick="logout()">
+                        <i class="ri-logout-box-line"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Desktop User Menu -->
+            <div class="desktop-user-menu dropdown">
+                <div class="user-avatar" onclick="toggleUserMenu()" id="userAvatar">
+                    <i class="ri-user-line"></i>
+                </div>
+                <div class="dropdown-menu" id="userDropdown">
+                    <a href="#" class="dropdown-item">
+                        <i class="ri-user-settings-line"></i>
+                        <span>Profile Settings</span>
+                    </a>
+                    <a href="#" class="dropdown-item">
+                        <i class="ri-settings-3-line"></i>
+                        <span>Preferences</span>
+                    </a>
+                    <a href="#" class="dropdown-item">
+                        <i class="ri-question-line"></i>
+                        <span>Help & Support</span>
+                    </a>
+                    <a href="#" class="dropdown-item danger" onclick="logout()">
+                        <i class="ri-logout-box-line"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Keep all your existing content (hero, actions, activity, footer) -->
+    <!-- Hero Banner Section -->
+    <section class="hero-section fade-in-up">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">Vehicle Registration Dashboard</h1>
+                <p class="hero-subtitle">
+                    Manage vehicle registrations, track status, and analyze data all in one place.
+                </p>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalRegistrations">0</span>
+                    <span class="stat-label">Total Registrations</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="pendingRegistrations">0</span>
+                    <span class="stat-label">Pending</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="thisMonthRegistrations">0</span>
+                    <span class="stat-label">This Month</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Actions Section -->
+    <section class="quick-actions">
+        <div class="quick-actions-container">
+            <div class="section-header">
+                <h2 class="section-title">Quick Actions</h2>
+                <p class="section-subtitle">
+                    Get started with the most common tasks and manage your vehicle registrations efficiently.
+                </p>
+            </div>
+            <div class="actions-grid">
+                <div class="action-card" onclick="openRegistration()">
+                    <div class="action-icon">
+                        <i class="ri-user-add-line"></i>
+                    </div>
+                    <h3 class="action-title">New Registration</h3>
+                    <p class="action-description">
+                        Register new vehicles and manage registration process with our streamlined form.
+                    </p>
+                    <a href="#" class="action-btn">Register Now</a>
+                </div>
+                <div class="action-card" onclick="viewList()">
+                    <div class="action-icon">
+                        <i class="ri-list-check-2"></i>
+                    </div>
+                    <h3 class="action-title">View Registrations</h3>
+                    <p class="action-description">
+                        Access and manage all vehicle registrations, filter and search through records.
+                    </p>
+                    <a href="#" class="action-btn">View List</a>
+                </div>
+                <div class="action-card" onclick="openAnalytics()">
+                    <div class="action-icon">
+                        <i class="ri-bar-chart-line"></i>
+                    </div>
+                    <h3 class="action-title">Analytics</h3>
+                    <p class="action-description">
+                        Track registration metrics and gain insights from your vehicle registration data.
+                    </p>
+                    <a href="#" class="action-btn">View Analytics</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Activity Section -->
+    <section class="recent-activity">
+        <div class="activity-container">
+            <div class="section-header">
+                <h2 class="section-title">Recent Activity</h2>
+                <p class="section-subtitle">
+                    Stay updated with the latest vehicle registrations and changes in your system.
+                </p>
+            </div>
+            <div class="activity-list" id="activityList">
+                <!-- Dynamic content will be loaded here -->
+                <div class="loading">
+                    <i class="ri-loader-4-line"></i>
+                    <p>Loading recent activities...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enhanced Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-top">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <div class="logo-icon">VR</div>
+                        <span class="logo-text">Vehicle Registry</span>
+                    </div>
+                    <p class="footer-description">
+                        Streamlined vehicle registration management for modern organizations.
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Quick Links</h4>
+                    <div class="footer-links-vertical">
+                        <a href="../register/register.html" class="footer-link">New Registration</a>
+                        <a href="../lists/list.html" class="footer-link">View Records</a>
+                        <a href="#" class="footer-link">Analytics</a>
+                        <a href="#" class="footer-link">Help Center</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Support</h4>
+                    <div class="footer-links-vertical">
+                        <a href="#" class="footer-link">Documentation</a>
+                        <a href="#" class="footer-link">Contact Support</a>
+                        <a href="#" class="footer-link">Privacy Policy</a>
+                        <a href="#" class="footer-link">Terms of Service</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Connect</h4>
+                    <div class="footer-social">
+                        <a href="#" class="social-link">
+                            <i class="ri-twitter-line"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="ri-linkedin-line"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="ri-github-line"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="ri-mail-line"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-text">© 2025 Vehicle Registry. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase and JavaScript -->
+    <script type="module" src="../firebase/firebase-config.js"></script>
+    <script type="module" src="home.js"></script>
+</body>
+</html>

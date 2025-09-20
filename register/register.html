@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Registration - Your Project</title>
+    <meta name="description" content="Modern vehicle registration form with date validation">
+    <meta name="author" content="Your Name">
+    
+    <!-- External Resources -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Variables for Consistent Theming */
+        :root {
+            --primary-color: #667eea;
+            --primary-dark: #764ba2;
+            --secondary-color: #f8f9fa;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --text-light: #ffffff;
+            --border-color: #e8ecef;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.15);
+            --border-radius: 12px;
+            --border-radius-large: 20px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        /* Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="a"><stop offset="0" stop-color="%23fff" stop-opacity=".05"/><stop offset="1" stop-color="%23fff" stop-opacity="0"/></radialGradient></defs><circle cx="50" cy="50" r="50" fill="url(%23a)"/></svg>') center/200px;
+            opacity: 0.3;
+            z-index: -1;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(180deg); }
+        }
+
+        /* Main Container */
+        .registration-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: var(--border-radius-large);
+            box-shadow: var(--shadow-heavy);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+        }
+
+        /* Header Section */
+        .registration-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 40px 36px;
+            text-align: center;
+            position: relative;
+        }
+
+        .registration-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="%23ffffff08" points="0,1000 1000,0 1000,1000"/></svg>');
+        }
+
+        .registration-header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .registration-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .registration-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .registration-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+
+        /* Form Section */
+        .registration-form-section {
+            padding: 48px 36px;
+        }
+
+        .registration-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Form Groups and Grid */
+        .form-grid {
+            display: grid;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-label .required {
+            color: var(--danger-color);
+            margin-left: 3px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-family: inherit;
+            transition: var(--transition);
+            background: #ffffff;
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-input:valid {
+            border-color: var(--success-color);
+        }
+
+        .form-input.error {
+            border-color: var(--danger-color);
+            background: #fdf2f2;
+        }
+
+        .form-input::placeholder {
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* Vehicle Type Selection */
+        .vehicle-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 8px;
+        }
+
+        .vehicle-option {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .vehicle-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .vehicle-option-card {
+            padding: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            text-align: center;
+            transition: var(--transition);
+            background: #ffffff;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .vehicle-option:hover .vehicle-option-card {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-light);
+        }
+
+        .vehicle-option input[type="radio"]:checked + .vehicle-option-card {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .vehicle-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .vehicle-title {
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .vehicle-description {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* Date Input Styling */
+        .date-input {
+            position: relative;
+        }
+
+        .date-input .form-input {
+            padding-right: 50px;
+        }
+
+        .date-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 18px;
+            pointer-events: none;
+        }
+
+        /* Input Icons */
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon .form-input {
+            padding-left: 50px;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 18px;
+            transition: var(--transition);
+        }
+
+        .form-input:focus + .input-icon {
+            color: var(--primary-color);
+        }
+
+        /* Error Messages */
+        .error-message {
+            color: var(--danger-color);
+            font-size: 12px;
+            margin-top: 6px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            animation: slideDown 0.3s ease;
+        }
+
+        /* Submit Button */
+        .submit-section {
+            margin-top: 32px;
+            text-align: center;
+        }
+
+        .submit-btn {
+            width: 100%;
+            max-width: 300px;
+            padding: 18px 32px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Navigation Links */
+        .form-navigation {
+            margin-top: 24px;
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .nav-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            margin: 0 16px;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .registration-container {
+                margin: 10px 0;
+            }
+
+            .registration-header {
+                padding: 30px 24px;
+            }
+
+            .registration-title {
+                font-size: 2rem;
+            }
+
+            .registration-form-section {
+                padding: 32px 24px;
+            }
+
+            .vehicle-options {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .registration-header {
+                padding: 24px 20px;
+            }
+
+            .registration-title {
+                font-size: 1.8rem;
+            }
+
+            .registration-form-section {
+                padding: 24px 20px;
+            }
+
+            .form-input {
+                padding: 14px 16px;
+                font-size: 15px;
+            }
+
+            .input-with-icon .form-input {
+                padding-left: 45px;
+            }
+
+            .submit-btn {
+                width: 100%;
+                max-width: none;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .registration-container {
+            animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Success States */
+        .success-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(39, 174, 96, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(39, 174, 96, 0);
+            }
+        }
+
+        /* Focus Management */
+        .form-input:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* High Contrast Support */
+        @media (prefers-contrast: high) {
+            .registration-container {
+                border: 2px solid #000;
+            }
+            
+            .form-input {
+                border-color: #000;
+            }
+        }
+
+        /* Reduced Motion Support */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="registration-container">
+        <!-- Header Section -->
+        <div class="registration-header">
+            <div class="registration-header-content">
+                <div class="registration-icon">
+                    <i class="ri-car-line"></i>
+                </div>
+                <h1 class="registration-title">Vehicle Registration</h1>
+                <p class="registration-subtitle">Register your vehicle with our secure and modern system</p>
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <div class="registration-form-section">
+            <form class="registration-form" id="registrationForm" novalidate>
+                <div class="form-grid">
+                    <!-- Owner Name -->
+                    <div class="form-group">
+                        <label for="ownerName" class="form-label">
+                            Owner Name <span class="required">*</span>
+                        </label>
+                        <div class="input-with-icon">
+                            <input 
+                                type="text" 
+                                id="ownerName" 
+                                name="ownerName" 
+                                class="form-input" 
+                                placeholder="Enter full name of vehicle owner"
+                                required
+                                autocomplete="name"
+                                aria-describedby="ownerNameError"
+                            >
+                            <i class="ri-user-line input-icon"></i>
+                        </div>
+                        <div class="error-message" id="ownerNameError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ownerPhone" class="form-label">Phone Number <span class="required">*</span></label>
+                        <input 
+                            type="tel" 
+                            id="ownerPhone" 
+                            class="form-input" 
+                            placeholder="Enter your phone number (e.g., +91 9876543210)"
+                            required
+                            pattern="[+]?[0-9\s\-\(\)]+"
+                            maxlength="15"
+                            autocomplete="tel"
+                            aria-describedby="ownerPhoneError"
+                        >
+                        <div id="ownerPhoneError" class="error-message"></div>
+                    </div>
+                    
+
+                    <div class="form-group">
+                        <label for="ownerEmail" class="form-label">Email Address <span class="required">*</span></label>
+                        <input 
+                            type="email" 
+                            id="ownerEmail" 
+                            class="form-input" 
+                            placeholder="Enter your email address"
+                            required
+                        >
+                        <div id="ownerEmailError" class="error-message"></div>
+                    </div>
+
+                    <!-- Vehicle Type -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            Vehicle Type <span class="required">*</span>
+                        </label>
+                        <div class="vehicle-options" role="radiogroup" aria-labelledby="vehicleTypeLabel">
+                            <div class="vehicle-option">
+                                <input type="radio" id="twoWheeler" name="vehicleType" value="2-wheeler" required>
+                                <label for="twoWheeler" class="vehicle-option-card">
+                                    <i class="ri-motorbike-line vehicle-icon"></i>
+                                    <div class="vehicle-title">2 Wheeler</div>
+                                    <div class="vehicle-description">Motorcycle, Scooter</div>
+                                </label>
+                            </div>
+                            <div class="vehicle-option">
+                                <input type="radio" id="threeWheeler" name="vehicleType" value="3-wheeler" required>
+                                <label for="threeWheeler" class="vehicle-option-card">
+                                    <i class="ri-taxi-line vehicle-icon"></i>
+                                    <div class="vehicle-title">3 Wheeler</div>
+                                    <div class="vehicle-description">Auto-rickshaw, Tempo</div>
+                                </label>
+                            </div>
+                            <div class="vehicle-option">
+                                <input type="radio" id="fourWheeler" name="vehicleType" value="4-wheeler" required>
+                                <label for="fourWheeler" class="vehicle-option-card">
+                                    <i class="ri-car-line vehicle-icon"></i>
+                                    <div class="vehicle-title">4 Wheeler</div>
+                                    <div class="vehicle-description">Car, SUV, Jeep</div>
+                                </label>
+                            </div>
+                            <div class="vehicle-option">
+                                <input type="radio" id="heavyVehicle" name="vehicleType" value="heavy-vehicle" required>
+                                <label for="heavyVehicle" class="vehicle-option-card">
+                                    <i class="ri-truck-line vehicle-icon"></i>
+                                    <div class="vehicle-title">Heavy Vehicle</div>
+                                    <div class="vehicle-description">Truck, Bus, Trailer</div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="error-message" id="vehicleTypeError"></div>
+                    </div>
+
+                    <!-- Registration Number -->
+                    <div class="form-group">
+                        <label for="registrationNumber" class="form-label">
+                            Registration Number <span class="required">*</span>
+                        </label>
+                        <div class="input-with-icon">
+                            <input 
+                                type="text" 
+                                id="registrationNumber" 
+                                name="registrationNumber" 
+                                class="form-input" 
+                                placeholder="e.g., MH12AB1234"
+                                required
+                                pattern="^[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}$"
+                                style="text-transform: uppercase;"
+                                aria-describedby="registrationNumberError"
+                            >
+                            <i class="ri-hashtag input-icon"></i>
+                        </div>
+                        <div class="error-message" id="registrationNumberError"></div>
+                    </div>
+
+                    <!-- Date of Testing -->
+                    <div class="form-group">
+                        <label for="testingDate" class="form-label">
+                            Date of Testing <span class="required">*</span>
+                        </label>
+                        <div class="date-input">
+                            <input 
+                                type="date" 
+                                id="testingDate" 
+                                name="testingDate" 
+                                class="form-input" 
+                                required
+                                aria-describedby="testingDateError"
+                            >
+                            <i class="ri-calendar-line date-icon"></i>
+                        </div>
+                        <div class="error-message" id="testingDateError"></div>
+                    </div>
+
+                    <!-- Expiring Date -->
+                    <div class="form-group">
+                        <label for="expiringDate" class="form-label">
+                            Expiring Date <span class="required">*</span>
+                        </label>
+                        <div class="date-input">
+                            <input 
+                                type="date" 
+                                id="expiringDate" 
+                                name="expiringDate" 
+                                class="form-input" 
+                                required
+                                aria-describedby="expiringDateError"
+                            >
+                            <i class="ri-calendar-event-line date-icon"></i>
+                        </div>
+                        <div class="error-message" id="expiringDateError"></div>
+                    </div>
+                </div>
+
+                <!-- Submit Section -->
+                <div class="submit-section">
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <i class="ri-send-plane-line" style="margin-right: 8px;"></i>
+                        Register Vehicle
+                    </button>
+                </div>
+
+                <!-- Navigation -->
+                <div class="form-navigation">
+                    <a href="../home/home.html" class="nav-link">
+                        <i class="ri-home-line"></i> Back to Home
+                    </a>
+                    <a href="../auth/auth.html" class="nav-link">
+                        <i class="ri-login-box-line"></i> Back to Login
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase functions directly in HTML (this always works)
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+        import { getFirestore, collection, addDoc, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+    
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQaw3dxlcrv1ZBPA6HgkGxj3yMwc_c_mA",
+            authDomain: "vehicle-auth-system.firebaseapp.com",
+            projectId: "vehicle-auth-system",
+            storageBucket: "vehicle-auth-system.firebasestorage.app",
+            messagingSenderId: "234492459371",
+            appId: "1:234492459371:web:ef2813f62c966f89f8742e"
+        };
+    
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+    
+        console.log('🔥 Firebase initialized in HTML:', db);
+    
+        // Wait for DOM to load
+        document.addEventListener('DOMContentLoaded', async () => {
+            const form = document.getElementById('registrationForm');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (!form) {
+                console.error('❌ Form not found');
+                return;
+            }
+    
+            console.log('✅ Form found, setting up submission handler');
+    
+            // Handle form submission
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                console.log('📝 Form submitted, processing...');
+                
+                // Show loading state
+                submitBtn.innerHTML = '🔄 Processing...';
+                submitBtn.disabled = true;
+                
+                try {
+                    // Get form data
+                    const formData = {
+                        ownerName: document.getElementById('ownerName').value.trim(),
+                        email: document.getElementById('ownerEmail').value.trim(),
+                        phone: document.getElementById('ownerPhone').value.trim(),
+                        vehicleType: document.querySelector('input[name="vehicleType"]:checked')?.value || '',
+                        registrationNumber: document.getElementById('registrationNumber').value.trim().toUpperCase(),
+                        testingDate: document.getElementById('testingDate').value,
+                        expiringDate: document.getElementById('expiringDate').value,
+                        submittedAt: new Date().toISOString(),
+                        status: 'pending',
+                        isActive: true
+                    };
+    
+                    console.log('📊 Form data prepared:', formData);
+    
+                    // Basic validation
+                    if (!formData.ownerName || !formData.email || !formData.phone || 
+                        !formData.vehicleType || !formData.registrationNumber || 
+                        !formData.testingDate || !formData.expiringDate) {
+                        throw new Error('Please fill in all required fields');
+                    }
+    
+                    // Check for duplicate registration number
+                    console.log('🔍 Checking for duplicate registration...');
+                    const q = query(collection(db, 'vehicleRegistrations'), where('registrationNumber', '==', formData.registrationNumber));
+                    const querySnapshot = await getDocs(q);
+                    
+                    if (!querySnapshot.empty) {
+                        throw new Error('Registration number already exists in our database');
+                    }
+    
+                    // Submit to Firebase
+                    console.log('💾 Submitting to Firebase Firestore...');
+                    const docRef = await addDoc(collection(db, 'vehicleRegistrations'), formData);
+                    
+                    console.log('✅ Document written with ID:', docRef.id);
+                    
+                    // Success notification
+                    showNotification(`Registration successful! ID: ${docRef.id.slice(-8).toUpperCase()}`, 'success');
+                    
+                    // Reset form
+                    form.reset();
+                    
+                    // Redirect after delay
+                    setTimeout(() => {
+                        window.location.href = '../lists/list.html';
+                    }, 100);
+                    
+                } catch (error) {
+                    console.error('❌ Registration error:', error);
+                    
+                    let errorMessage = error.message;
+                    if (error.code === 'permission-denied') {
+                        errorMessage = 'Permission denied. Please check Firebase security rules.';
+                    } else if (error.code === 'unavailable') {
+                        errorMessage = 'Firebase service unavailable. Please check your internet connection.';
+                    }
+                    
+                    showNotification('Registration failed: ' + errorMessage, 'error');
+                    
+                } finally {
+                    // Reset button
+                    submitBtn.innerHTML = '<i class="ri-send-plane-line" style="margin-right: 8px;"></i> Register Vehicle';
+                    submitBtn.disabled = false;
+                }
+            });
+    
+            // Notification function
+            function showNotification(message, type = 'info') {
+                // Remove existing notifications
+                const existingNotifications = document.querySelectorAll('.firebase-notification');
+                existingNotifications.forEach(notif => notif.remove());
+    
+                const notification = document.createElement('div');
+                notification.className = 'firebase-notification';
+                
+                const colors = {
+                    success: '#27ae60',
+                    error: '#e74c3c',
+                    info: '#3498db',
+                    warning: '#f39c12'
+                };
+    
+                notification.style.cssText = `
+                    position: fixed; top: 20px; right: 20px; z-index: 10000;
+                    padding: 16px 24px; border-radius: 8px; color: white;
+                    font-weight: 500; box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+                    background: ${colors[type]}; max-width: 400px;
+                    animation: slideIn 0.3s ease;
+                `;
+    
+                notification.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <i class="${type === 'success' ? 'ri-check-line' : type === 'error' ? 'ri-error-warning-line' : 'ri-information-line'}"></i>
+                        <span>${message}</span>
+                    </div>
+                `;
+    
+                document.body.appendChild(notification);
+                
+                // Auto-remove after delay
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => notification.remove(), 300);
+                }, type === 'success' ? 5000 : 4000);
+            }
+    
+            // Add required animations
+            if (!document.getElementById('firebaseAnimations')) {
+                const style = document.createElement('style');
+                style.id = 'firebaseAnimations';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOut {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+    
+            console.log('🎯 Firebase form handler setup complete');
+        });
+    </script>
+
+    <!-- External JavaScript -->
+    <script type="module" src="register.js"></script>
+</body>
+</html>
